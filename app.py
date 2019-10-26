@@ -14,7 +14,7 @@ app = Flask(__name__)
 def transfer_id():
 	if request.method == "POST":
 		key = None
-		while key is None or key in live_transactions.keySet():
+		while key is None or key in live_transactions.keys():
 			key = ''.join(random.choice(valid) for _ in range(20))
 
 		live_transactions[key] = current_transaction ##### NEED TO CREATE CURRENT_TRANSACTION, THAT'S SOMETHING WE NEED THE API TO BE ABLE TO DO
@@ -26,10 +26,12 @@ def transfer_id():
 
 @app.route("/get_balance", methods=["GET"])
 def get_balance():
-	customerId = request.form.get("customerId", None)
+	customerId = request.args.get("customerID", None)
+	print(request.args.to_dict().keys())
+	print(customerId)
 	url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey)
 	account = requests.get(url)
-	return account
+	return account.json()[0]
 
 @app.route("/get_customers", methods=["GET"])
 def get_customers():
@@ -41,4 +43,4 @@ def get_customers():
 
 
 if __name__ == "__main__":
-	app.run(host='0.0.0.0', threaded=True)
+	app.run(host='0.0.0.0', threaded=True, debug=True)
