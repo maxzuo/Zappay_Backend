@@ -4,6 +4,7 @@ import random
 
 
 valid = "abcdefghijklmnopqrstuvwxyz0123456789"
+apiKey = "7eef02ee968ed07e8f2b15b969e927f5"
 live_transactions = dict()
 
 app = Flask(__name__)
@@ -20,6 +21,22 @@ def transfer_id():
 	elif request.method == "GET":
 		information = live_transactions.pop(request.form.get("transfer_id", None), None)
 		return information
+
+
+@app.route("/get_balance", methods=["GET"])
+def get_balance():
+	customerId = request.form().get("customerId")
+	url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey)
+	account = requests.get(url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey))
+	return {"account": account}
+
+@app.route("/get_customers", methods=["GET"])
+def get_customers():
+	url = 'http://api.reimaginebanking.com/customers?key={}'.format(customerId,apiKey)
+	customers = requests.get(url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey))
+	return {"account": account}
+
+
 
 
 if __name__ == "__main__":
