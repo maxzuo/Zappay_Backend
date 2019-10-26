@@ -1,4 +1,5 @@
 from flask import Flask, flash, request, redirect, url_for, escape, render_template
+import requests
 import json
 import random
 
@@ -25,15 +26,15 @@ def transfer_id():
 
 @app.route("/get_balance", methods=["GET"])
 def get_balance():
-	customerId = request.form().get("customerId")
+	customerId = request.form.get("customerId", None)
 	url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey)
-	account = requests.get(url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey))
-	return {"account": account}
+	account = requests.get(url)
+	return account
 
 @app.route("/get_customers", methods=["GET"])
 def get_customers():
 	url = 'http://api.reimaginebanking.com/customers?key={}'.format(customerId,apiKey)
-	customers = requests.get(url = 'http://api.reimaginebanking.com/customers/{}/accounts?key={}'.format(customerId,apiKey))
+	customers = request.get(url)
 	return {"account": account}
 
 
